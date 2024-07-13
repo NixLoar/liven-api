@@ -1,0 +1,12 @@
+{
+    "name": "nixlo/liven-api",
+    "autoload": {
+        "psr-4": {
+            "SRC\\": "src/"
+        }
+    },
+    "files": [
+        "./config/database.php"
+    ],
+    "require": {}
+}
