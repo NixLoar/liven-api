@@ -25,4 +25,4 @@ Desenvolver uma API HTTP com cadastro e controle de usuários.
 
 - **hotfix/nome_correção**: Crie uma nova quando for implementar uma correção **urgente** direto em produção. Crie a partir da branch *main*. Ao finalizar, dê *merge* na *main* e *dev* e a delete
 
-- **release**: Crie uma nova quando uma etapa de desenvolvimento estiver finalizada e for para os testes finais, na última etapa antes de ir para produção. Crie a partir da branch *dev*, após ter todas as *features*, *fixes* e *hotfixes* mergeados na *dev*. Ao finalizar os testes e possíveis correções, dê *merge* na *main* e *dev* e a delete. Ao ser deletada, a versão do software deve ser atualizado
+- **release/version**: Crie uma nova quando uma etapa de desenvolvimento estiver finalizada e for para os testes finais, na última etapa antes de ir para produção. Crie a partir da branch *dev*, após ter todas as *features*, *fixes* e *hotfixes* mergeados na *dev*. Ao finalizar os testes e possíveis correções, dê *merge* na *main* e *dev* e a delete. Ao ser deletada, a tag de versão do software deve ser atualizada
