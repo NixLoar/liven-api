@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// require_once '../../config/database.php';
-
 use Config\Database; 
 
 class UserModel{
@@ -27,8 +25,25 @@ class UserModel{
   public static function create($data) {
     $database = new Database();
     $conn = $database->getConnection();
+    $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
     $sql = 'INSERT INTO '.self::$table.' (nome, email, senha, telefone) VALUES (?, ?, ?, ?)';
     $stmt = $conn->prepare($sql);
-    return $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone']]);
+    return $stmt->execute([$data['nome'], $data['email'], $hashedPassword, $data['telefone']]);
+  }
+
+  public static function update($data, $id) {
+    $database = new Database();
+    $conn = $database->getConnection();
+    $sql = 'UPDATE ' .self::$table.' SET nome = ?, email = ?, senha = ?, telefone = ? WHERE id = ?';
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone'], $id]);
+  }
+
+  public static function delete($id) {
+    $database = new Database();
+    $conn = $database->getConnection();
+    $sql = 'DELETE FROM ' .self::$table.' WHERE id=?';
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute([$id]);
   }
 }

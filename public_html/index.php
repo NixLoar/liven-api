@@ -23,19 +23,21 @@ if ($urlParam) {
         $controller->get($id);
       }
 
-      if ($url[2] === 'create' && $method === 'POST') {
+      else if ($url[2] === 'create' && $method === 'POST') {
         $controller = new UserController();
         $controller->post();
       }
 
-      if ($url[2] === 'update' && $method === 'PUT') {
+      else if ($url[2] === 'update' && $method === 'PUT' && $url[3]) {
         $controller = new UserController();
-        $controller->put();
+        $id = $url[3];
+        $controller->put($id);
       }
 
-      if ($url[2] === 'delete' && $method === 'DELETE') {
+      else if ($url[2] === 'delete' && $method === 'DELETE' && $url[3]) {
         $controller = new UserController();
-        $controller->delete();
+        $id = $url[3];
+        $controller->delete($id);
       }
     } 
   } else {
