@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: API Liven
+  description: Documentação da API Liven - CRUD de usuários e endereços
+  version: 1.0.0
+paths:
+  /api/user/read/{id}:
+    get:
+      summary: Obter os dados de um usuário cadastrado por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do usuário a ser recuperado.
+      responses:
+        '200':
+          description: Usuário recuperado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  email:
+                    type: string
+                  telefone:
+                    type: string
+        '404':
+          description: Usuário não encontrado.
+
+  /api/user/create:
+    post:
+      summary: Cadastra um novo usuário no banco de dados
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+                telefone:
+                  type: string
+      responses:
+        '201':
+          description: Usuário criado com sucesso.
+        '400':
+          description: Dados inválidos.
+
+  /api/user/update/{id}:
+    put:
+      summary: Atualizar um usuario existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do usuário que sera atualizado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+                telefone:
+                  type: string
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso.
+        '404':
+          description: Usuário não encontrado.
+        '400':
+          description: Dados inválidos ao atualizar o usuário.
+
+  /api/user/delete/{id}:
+    delete:
+      summary: Deletar um usuário
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do usuário que será deletado.
+      responses:
+        '204':
+          description: Usuário deletado com sucesso.
+        '404':
+          description: Usuário não encontrado.
