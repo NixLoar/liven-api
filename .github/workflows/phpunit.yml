@@ -7,30 +7,40 @@ on:
       - dev
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: senha123 
-          MYSQL_DATABASE: liven_projeto 
+          MYSQL_ROOT_PASSWORD: senha123
+          MYSQL_DATABASE: liven_projeto
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2.12'
+        extensions: mbstring, pdo, pdo_mysql
 
-      - name: Install dependencies
-        run: composer install --no-progress --no-suggest
+    - name: Install dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist
 
-      - name: Execute PHPUnit tests
-        run: phpunit --configuration phpunit.xml
+    - name: Run PHPUnit
+      env:
+        LOCAL_DB_HOST: 127.0.0.1
+        LOCAL_DB_NAME: liven_projeto
+        LOCAL_DB_USER: root
+        LOCAL_DB_PASS: senha123
+      run: vendor/bin/phpunit --configuration phpunit.xml
