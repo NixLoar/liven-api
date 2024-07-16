@@ -41,7 +41,7 @@ jobs:
       - name: Create MySQL Database and Tables
         run: |
           mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 -e "CREATE DATABASE IF NOT EXISTS \`liven-projeto\`;"
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 \`liven-projeto\` -e "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));"
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 \liven-projeto\ -e "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));"
 
       # - name: Install Composer dependencies
       #   run: composer install --prefer-dist --no-progress --no-suggest
