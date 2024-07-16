@@ -1,1 +1,1 @@
-{"version":1,"defects":{"UserTest::testRead":8,"UserTest::testCreate":8,"UserTest::testUpdate":8,"UserTest::testDelete":8},"times":{"UserTest::testRead":0.001,"UserTest::testCreate":0.059,"UserTest::testUpdate":0.002,"UserTest::testDelete":0.002}}
+{"version":1,"defects":{"UserTest::testRead":8,"UserTest::testCreate":8,"UserTest::testUpdate":8,"UserTest::testDelete":8},"times":{"UserTest::testRead":0.001,"UserTest::testCreate":0.058,"UserTest::testUpdate":0.002,"UserTest::testDelete":0.002}}

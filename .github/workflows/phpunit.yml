@@ -37,6 +37,17 @@ jobs:
     - name: Install dependencies
       run: composer install --no-progress --no-suggest --prefer-dist
 
+    - name: Create database schema
+      run: |
+        sudo mysql -u root -psenha123 -e "CREATE TABLE users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          nome VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          senha VARCHAR(255) NOT NULL,
+          telefone VARCHAR(20) NOT NULL,
+          UNIQUE KEY (email)
+        );"
+
     - name: Run PHPUnit
       env:
         LOCAL_DB_HOST: 127.0.0.1
@@ -44,3 +55,4 @@ jobs:
         LOCAL_DB_USER: root
         LOCAL_DB_PASS: senha123
       run: vendor/bin/phpunit --configuration phpunit.xml
+
