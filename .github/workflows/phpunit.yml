@@ -43,8 +43,8 @@ jobs:
 
       - name: Execute PHPUnit tests
         env:
-          LOCAL_DB_HOST=127.0.0.1
-          LOCAL_DB_NAME=liven_projeto
-          LOCAL_DB_USER=root
-          LOCAL_DB_PASS=senha123
+          LOCAL_DB_HOST: 127.0.0.1
+          LOCAL_DB_NAME: liven_projeto
+          LOCAL_DB_USER: root
+          LOCAL_DB_PASS: senha123
         run: vendor/bin/phpunit
