@@ -36,7 +36,7 @@ jobs:
       - name: Verify MySQL connection
         run: |
           mysql --version
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -p senha123 -e "SHOW DATABASES"
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 -e "SHOW DATABASES"
 
       # - name: Create MySQL Database and Tables
       #   run: |
