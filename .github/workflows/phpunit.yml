@@ -46,7 +46,7 @@ jobs:
 
     - name: Create database schema
       run: |
-        mysql -h127.0.0.1 -uroot -psenha123 -e "CREATE TABLE users (
+        mysql -h127.0.0.1 -uroot -psenha123 -e "USE liven_projeto; CREATE TABLE users (
           id INT AUTO_INCREMENT PRIMARY KEY,
           nome VARCHAR(255) NOT NULL,
           email VARCHAR(255) NOT NULL,
@@ -62,4 +62,5 @@ jobs:
         LOCAL_DB_USER: root
         LOCAL_DB_PASS: senha123
       run: vendor/bin/phpunit --configuration phpunit.xml
+
 
