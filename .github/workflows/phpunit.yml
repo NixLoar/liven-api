@@ -33,9 +33,6 @@ jobs:
           php-version: '8.2.12'
           extensions: mbstring, intl, mysqli, pdo_mysql, zip
 
-      - name: Copy .env.example to .env
-        run: cp .env.example .env
-
       - name: Create MySQL Database and Tables
         run: |
           mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 -e "CREATE DATABASE IF NOT EXISTS liven_projeto;"
@@ -45,4 +42,9 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Execute PHPUnit tests
+        env:
+          LOCAL_DB_HOST=127.0.0.1
+          LOCAL_DB_NAME=liven_projeto
+          LOCAL_DB_USER=root
+          LOCAL_DB_PASS=senha123
         run: vendor/bin/phpunit
