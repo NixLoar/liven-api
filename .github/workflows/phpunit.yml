@@ -1,50 +1,36 @@
 name: PHPUnit Tests
 
 on:
-  push:
-    branches:
-      - 'main'
   pull_request:
     branches:
-      - 'main'
-      - 'dev'
+      - main 
+      - dev
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
-          MYSQL_DATABASE: liven_projeto
-          MYSQL_ROOT_PASSWORD: senha123
+          MYSQL_ROOT_PASSWORD: senha123 
+          MYSQL_DATABASE: liven_projeto 
         ports:
-          - 3306
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup PHP
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2.12'
-          extensions: mbstring, intl, mysqli, pdo_mysql, zip
+          php-version: '8.0'
 
-      - name: Create MySQL Database and Tables
-        run: |
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 -e "CREATE DATABASE IF NOT EXISTS liven_projeto;"
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -psenha123 liven_projeto -e "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));"
-
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest
 
       - name: Execute PHPUnit tests
-        env:
-          LOCAL_DB_HOST: 127.0.0.1
-          LOCAL_DB_NAME: liven_projeto
-          LOCAL_DB_USER: root
-          LOCAL_DB_PASS: senha123
-        run: vendor/bin/phpunit
+        run: phpunit --configuration phpunit.xml
