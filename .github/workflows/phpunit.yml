@@ -1,3 +1,11 @@
+name: PHPUnit Tests
+
+on:
+  pull_request:
+    branches:
+      - main 
+      - dev
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,3 +62,4 @@ jobs:
         LOCAL_DB_USER: root
         LOCAL_DB_PASS: senha123
       run: vendor/bin/phpunit --configuration phpunit.xml
+
