@@ -10,69 +10,43 @@ on:
       - 'dev'
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
-  services:
-    mysql:
-      image: mysql:5.7
-      env:
-        MYSQL_DATABASE: liven-projeto
-        MYSQL_USER: root
-        MYSQL_PASSWORD: senha123
-        MYSQL_ROOT_PASSWORD: senha123
-      ports:
-        - 3306
-      options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: liven-projeto
+          MYSQL_USER: root
+          MYSQL_PASSWORD: senha123
+          MYSQL_ROOT_PASSWORD: senha123
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2.12'
+          extensions: mysqli
+
       - name: Verify MySQL connection
         run: |
           mysql --version
-          sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret -e "SHOW DATABASES"
-      
-      # - name: Execute tests
-      #   run: vendor/bin/phpunit
-      #   env:
-      #     DB_PORT: 3306
-      #     DB_USERNAME: root
-      #     DB_PASSWORD: senha123
-      #     DB_DATABASE: liven-projeto
-      #     DB_HOST: 127.0.0.0
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -p senha123 -e "SHOW DATABASES"
 
-# jobs:
-#   tests:
-#     runs-on: ubuntu-latest
+      # - name: Create MySQL Database and Tables
+      #   run: |
+      #     mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -p senha123 -e "CREATE DATABASE IF NOT EXISTS liven-projeto;"
+      #     mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -u root -p senha123 liven-projeto -e "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));"
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+      # - name: Install Composer dependencies
+      #   run: composer install --prefer-dist --no-progress --no-suggest
 
-#       - name: Setup PHP
-#         uses: shivammathur/setup-php@v2
-#         with:
-#           php-version: '8.2.12'
-#           extensions: mysqli
-
-#       - name: Install MySQL
-#         run: sudo apt-get install -y mysql-server
-
-#       - name: Start MySQL service
-#         run: sudo service mysql start
-
-#       - name: Create MySQL Database and Tables
-#         env:
-#           LOCAL_DB_HOST: localhost
-#           LOCAL_DB_NAME: liven-projeto
-#           LOCAL_DB_USER: root
-#           LOCAL_DB_PASS: senha123
-#         run: |
-#           mysql -e 'CREATE DATABASE IF NOT EXISTS liven-projeto;'
-#           mysql -e 'USE liven-projeto; CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));'
-
-#       - name: Install Composer dependencies
-#         run: composer install --prefer-dist --no-progress --no-suggest
-
-#       - name: Execute PHPUnit tests
-#         run: ./vendor/bin/phpunit --configuration phpunit.xml
+      # - name: Execute PHPUnit tests
+      #   run: ./vendor/bin/phpunit --configuration phpunit.xml
