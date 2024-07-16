@@ -3,49 +3,43 @@ name: PHPUnit Tests
 on:
   push:
     branches:
-      - '*' 
+      - '*'
   pull_request:
     branches:
-      - '*' 
+      - '*'
 
 jobs:
   tests:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2.12'
-        extensions: mysqli
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2.12'
+          extensions: mysqli
 
-    - name: Install MySQL
-      run: sudo apt-get install -y mysql-server
+      - name: Install MySQL
+        run: sudo apt-get install -y mysql-server
 
-    - name: Start MySQL service
-      run: sudo service mysql start
+      - name: Start MySQL service
+        run: sudo service mysql start
 
-    - name: Load environment variables
-      run: cp .env.example .env
+      - name: Create MySQL Database and Tables
+        env:
+          LOCAL_DB_HOST: localhost
+          LOCAL_DB_NAME: liven-projeto
+          LOCAL_DB_USER: root
+          LOCAL_DB_PASS: senha123
+        run: |
+          mysql -e 'CREATE DATABASE IF NOT EXISTS liven-projeto;'
+          mysql -e 'USE liven-projeto; CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));'
 
-    - name: Setup MySQL database
-      env:
-        LOCAL_DB_HOST: ${{ env.LOCAL_DB_HOST }}
-        LOCAL_DB_NAME: ${{ env.LOCAL_DB_NAME }}
-        LOCAL_DB_USER: ${{ env.LOCAL_DB_USER }}
-        LOCAL_DB_PASS: ${{ env.LOCAL_DB_PASS }}
-      run: |
-        mysql -e 'CREATE DATABASE IF NOT EXISTS test_db;'
-        mysql -e 'CREATE USER IF NOT EXISTS "test_user"@"localhost" IDENTIFIED BY "password";'
-        mysql -e 'GRANT ALL PRIVILEGES ON test_db.* TO "test_user"@"localhost";'
-        mysql -e 'FLUSH PRIVILEGES;'
-        mysql -u $LOCAL_DB_USER -p$LOCAL_DB_PASS $LOCAL_DB_NAME -e "CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL, senha VARCHAR(255) NOT NULL, telefone VARCHAR(255) NOT NULL, UNIQUE KEY (email));"
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Install Composer dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Execute PHPUnit tests
-      run: ./vendor/bin/phpunit --configuration phpunit.xml
+      - name: Execute PHPUnit tests
+        run: ./vendor/bin/phpunit --configuration phpunit.xml
