@@ -10,7 +10,7 @@ class UserModel{
 
   private static function getConnection() {
     if (self::$conn === null) {
-        $database = new Database();
+        $database = new Database;
         self::$conn = $database->getConnection();
     }
     return self::$conn;
@@ -54,5 +54,33 @@ class UserModel{
     $sql = 'DELETE FROM ' .self::$table.' WHERE id=?';
     $stmt = $conn->prepare($sql);
     return $stmt->execute([$id]);
+  }
+
+  public function checkCredentials($email, $senha) {
+    $conn = self::getConnection();
+    $sql = 'SELECT id, senha FROM users WHERE email = :email';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if (!$user) {
+      return [
+        'success' => false,
+        'message' => 'Usuário não encontrado'
+      ];
+    }
+
+    if (!password_verify($senha, $user['senha'])) {
+      return [
+        'success' => false,
+        'message' => 'Senha incorreta'
+      ];
+    }
+
+    return [
+      'success' => true,
+      'user_id' => $user['id'],
+      'message' => 'Login feito com sucesso'
+    ];
   }
 }
