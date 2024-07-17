@@ -10,16 +10,21 @@ class UserController {
     try {
       $user = new UserModel;
       $userData = $user->read($id);
-      echo json_encode($userData);
+      if (!$userData) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Usuário não encontrado']);
+        return;
+      }
+      echo json_encode(['Dados do usuário' => $userData]);
     } catch (\Exception $e) {
-      http_response_code(404);
+      http_response_code(500);
       echo json_encode(['error' => $e->getMessage()]);
     }
   }
 
   public function post() {
     try {
-      $data = json_decode(file_get_contents('php://input'), true);
+      $data = $this->getJsonBody();
       $user = new UserModel;
       $createdUserId = $user->create($data);
       if ($createdUserId !== null) {
@@ -37,7 +42,7 @@ class UserController {
 
   public function put($id) {
     try {
-      $data = json_decode(file_get_contents('php://input'), true);
+      $data = $this->getJsonBody();
       $user = new UserModel;
       if ($user->update($data, $id)) {
         echo json_encode(['message' => 'Usuario atualizado com sucesso']);
@@ -64,5 +69,14 @@ class UserController {
       http_response_code(500);
       echo json_encode(['error' => $e->getMessage()]);
     }
+  }
+
+  // Valida o JSON recebido pela requisição
+  private function getJsonBody() {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+      throw new \Exception('Dados inválidos no corpo da requisição');
+    }
+    return $data;
   }
 }

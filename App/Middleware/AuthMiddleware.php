@@ -23,8 +23,7 @@ class AuthMiddleware {
       }
     } else {
       http_response_code(401);
-      echo json_encode(['message' => 'Acesso nao autorizado: t
-      oken nao encontrado']);
+      echo json_encode(['message' => 'Acesso nao autorizado: token nao encontrado']);
       return false;
     }
   }
