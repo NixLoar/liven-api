@@ -2,9 +2,10 @@
 
 require_once '../vendor/autoload.php';
 
-use App\Controllers\UserController;
-use App\Controllers\AuthController;
 use App\Middleware\AuthMiddleware;
+use App\Controllers\AuthController;
+use App\Controllers\UserController;
+use App\Controllers\AddressController;
 
 // Sanitização da URL
 $urlParam = filter_var($_GET['url'] ?? '', FILTER_SANITIZE_URL);
@@ -20,7 +21,7 @@ if ($urlParam) {
     $method = $_SERVER['REQUEST_METHOD'];
     
     // Rota /api/login
-    if($endpoint === 'login' && $method === 'POST') {
+    if ($endpoint === 'login' && $method === 'POST') {
       $controller = new AuthController();
       $controller->login();
     } 
@@ -61,6 +62,40 @@ if ($urlParam) {
         echo "Erro: servico da API não definido: " . $service;
       }
     } 
+
+    // Rota /api/address/*
+    elseif ($endpoint === 'address' && $url[2] && $url[3]) {
+      $service = $url[2];
+      $id = $url[3];
+      $authMiddleware = new AuthMiddleware();
+      $controller = new AddressController();
+
+      // Serviços da rota /api/address/*
+
+      if ($service === 'read' && $method === 'GET') {
+        $authMiddleware->handle(function() use ($controller, $id){
+          $controller->get($id);
+        }); 
+      }
+
+      if ($service === 'create') {
+        $authMiddleware->handle(function() use ($controller, $id){
+          $controller->post($id);
+        }); 
+      }
+
+      if ($service === 'update') {
+        $authMiddleware->handle(function() use ($controller, $id){
+          $controller->put($id);
+        }); 
+      }
+
+      if ($service === 'delete') {
+        $authMiddleware->handle(function() use ($controller, $id){
+          $controller->delete($id);
+        }); 
+      }
+    }
     
     else {
       echo "Erro: endpoint da API não definido: " . $endpoint;
