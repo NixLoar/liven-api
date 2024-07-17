@@ -2,7 +2,8 @@
     "name": "nixlo/liven-api",
     "autoload": {
         "psr-4": {
-            "App\\": "App/"
+            "App\\": "App/",
+            "Config\\": "config/"
         },
         "files": [
             "config/database.php"
