@@ -12,10 +12,11 @@ class UserController {
       $userData = $user->read($id);
       if (!$userData) {
         http_response_code(404);
-        echo json_encode(['error' => 'Usuário não encontrado']);
+        echo json_encode(['error' => 'Usuario nao encontrado']);
         return;
       }
-      echo json_encode(['Dados do usuário' => $userData]);
+      http_response_code(200);
+      echo json_encode(['Dados do usuario' => $userData]);
     } catch (\Exception $e) {
       http_response_code(500);
       echo json_encode(['error' => $e->getMessage()]);
@@ -45,6 +46,7 @@ class UserController {
       $data = $this->getJsonBody();
       $user = new UserModel;
       if ($user->update($data, $id)) {
+        http_response_code(204);
         echo json_encode(['message' => 'Usuario atualizado com sucesso']);
       } else {
         http_response_code(400);
@@ -60,6 +62,7 @@ class UserController {
     try {
       $user = new UserModel;
       if ($user->delete($id)) {
+        http_response_code(201);
         echo json_encode(['message' => 'Usuario deletado com sucesso']);
       } else {
         http_response_code(400);
@@ -75,7 +78,7 @@ class UserController {
   private function getJsonBody() {
     $data = json_decode(file_get_contents('php://input'), true);
     if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-      throw new \Exception('Dados inválidos no corpo da requisição');
+      throw new \Exception('Dados invalidos no corpo da requisicao');
     }
     return $data;
   }

@@ -19,18 +19,16 @@ class UserModel{
 
   public static function read($id) {
     $conn = self::getConnection();
-    $sql = 'SELECT * FROM '.self::$tableUsers.' WHERE id = :id';
+    $sql = 'SELECT * FROM '.self::$tableUsers.' WHERE id = ?';
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':id', $id);
-    $stmt->execute();
+    $stmt->execute([$id]);
 
     if($stmt->rowCount() > 0) {
       $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-      $sqlAddress = 'SELECT * FROM ' .self::$tableAddresses.' WHERE user_id = :id';
+      $sqlAddress = 'SELECT * FROM ' .self::$tableAddresses.' WHERE user_id = ?';
       $stmtAddress = $conn->prepare($sqlAddress);
-      $stmtAddress->bindValue(':id', $id);
-      $stmtAddress->execute();
+      $stmtAddress->execute([$id]);
 
       if ($stmtAddress->rowCount() > 0) {
           $addresses = $stmtAddress->fetchAll(\PDO::FETCH_ASSOC);
@@ -61,6 +59,7 @@ class UserModel{
     $conn = self::getConnection();
     $sql = 'UPDATE ' .self::$tableUsers.' SET nome = ?, email = ?, senha = ?, telefone = ? WHERE id = ?';
     $stmt = $conn->prepare($sql);
+    $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone'], $id]);
     return $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone'], $id]);
   }
 

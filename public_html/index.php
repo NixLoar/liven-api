@@ -11,7 +11,6 @@ use App\Controllers\AddressController;
 $urlParam = filter_var($_GET['url'] ?? '', FILTER_SANITIZE_URL);
 
 if ($urlParam) {
-  
   $url = explode('/', $urlParam);
   
   if ($url[0] === 'api' && $url[1]) {
@@ -33,10 +32,9 @@ if ($urlParam) {
       $service = $url[2];
 
       // Serviços da rota /api/user/*
-      if ($service === 'read' && $method === 'GET' && $url[3]) {
-        $authMiddleware->handle(function() use ($controller, $url) {
-          $id = $url[3];
-          $controller->get($id);
+      if ($service === 'read' && $method === 'GET') {
+        $authMiddleware->handle(function($userID) use ($controller) {
+          $controller->get($userID);
         });
       }
 
@@ -44,72 +42,74 @@ if ($urlParam) {
         $controller->post();
       }
 
-      elseif ($service === 'update' && $method === 'PUT' && $url[3]) {
-        $authMiddleware->handle(function() use ($controller, $url) {
-          $id = $url[3];
-          $controller->put($id);
+      elseif ($service === 'update' && $method === 'PUT') {
+        $authMiddleware->handle(function($userID) use ($controller) {
+          $controller->put($userID);
         });
       }
 
-      elseif ($service === 'delete' && $method === 'DELETE' && $url[3]) {
-        $authMiddleware->handle(function() use ($controller, $url) {
-          $id = $url[3];
-          $controller->delete($id);
+      elseif ($service === 'delete' && $method === 'DELETE') {
+        $authMiddleware->handle(function($userID) use ($controller) {
+          $controller->delete($userID);
         });
-      }
-
-      else{
+      } else {
         echo "Erro: servico da API não definido: " . $service;
       }
     } 
 
     // Rota /api/address/*
-    elseif ($endpoint === 'address' && $url[2] && $url[3]) {
-      $service = $url[2];
-      $id = $url[3];
+    elseif ($endpoint === 'address') {
       $authMiddleware = new AuthMiddleware();
       $controller = new AddressController();
 
-      // Serviços da rota /api/address/*
+      // Verifica se há uma qyery string cep
+      if ($method === 'GET' && isset($_GET['cep'])) {
+        $authMiddleware->handle(function($userID) use ($controller) {
+          $cep = filter_var($_GET['cep'], FILTER_SANITIZE_SPECIAL_CHARS);
+          $controller->getByCep($cep, $userID);
+        });
 
-      if ($service === 'read' && $method === 'GET') {
-        $authMiddleware->handle(function() use ($controller, $id){
-          $controller->get($id);
-        }); 
-      }
+      } elseif ($url[2]) {
+        $service = $url[2];
 
-      if ($service === 'create') {
-        $authMiddleware->handle(function() use ($controller, $id){
-          $controller->post($id);
-        }); 
-      }
+        // Serviços da rota /api/address/*
+        if ($service === 'read' && $method === 'GET') {
+            $authMiddleware->handle(function($userID) use ($controller) {
+              $controller->get($userID);
+            });
+        } 
 
-      if ($service === 'update') {
-        $authMiddleware->handle(function() use ($controller, $id){
-          $controller->put($id);
-        }); 
-      }
+        elseif ($service === 'create' && $method === 'POST') {
+          $authMiddleware->handle(function($userID) use ($controller) {
+            $controller->post($userID);
+          });
+        } 
 
-      if ($service === 'delete') {
-        $authMiddleware->handle(function() use ($controller, $id){
-          $controller->delete($id);
-        }); 
+        elseif ($service === 'update' && $method === 'PUT' && $url[3]) {
+          $tableID = $url[3];
+          $authMiddleware->handle(function($userID) use ($controller, $tableID) {
+            $controller->put($userID, $tableID);
+          });
+        } 
+
+        elseif ($service === 'delete' && $method === 'DELETE' && $url[3]) {
+          $tableID = $url[3];
+          $authMiddleware->handle(function($userID) use ($controller, $tableID) {
+            $controller->delete($userID, $tableID);
+          });
+        } 
+        
+        else {
+          echo "Erro: endpoint da API não definido: " . $endpoint;
+        }
       }
-    }
-    
-    else {
-      echo "Erro: endpoint da API não definido: " . $endpoint;
-    }
-  } 
-  
-  else {
-    echo "Erro: rota inválida: " . implode('/', $url);
+    } else {
+      echo "Erro: rota inválida: " . implode('/', $url);
   }
-} 
-
-else {
+} else {
   echo "Erro: URL não definida";
-} 
+  } 
+}
 
 /* Disclaimer para a avaliação do código: sei que existem método mais limpos de escrita das rotas, não explicitando cada uma delas e fazendo de forma mais dinâmica. 
 Por exemplo, algo como call_user_func_array(array(new $controller, $method), $url). 

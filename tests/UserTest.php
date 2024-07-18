@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use App\Models\UserModel;
+use App\Models\AddressModel;
 use Config\Database;
  
 class UserTest extends TestCase {
@@ -14,25 +15,25 @@ class UserTest extends TestCase {
     $this->user = new UserModel($this->db);
   }
 
-  public function testCreate() {
+  public function testUserCreate() {
     $data = ['nome' => 'Teste Validator Oliveira', 'email' => 'teste.oliveira@example.com', 'senha' => '1234', 'telefone' => '(11)9999-9999'];
     self::$createdUserID = $this->user->create($data);
     $this->assertIsString(self::$createdUserID, 'ID do usuário criado não é uma string.');
     $this->assertTrue(is_numeric(self::$createdUserID), 'ID do usuário criado não é numérico.');
   }
 
-  public function testRead() {
+  public function testUserRead() {
     $user = $this->user->read(self::$createdUserID);
     $this->assertIsArray($user);
     $this->assertEquals('Teste Validator Oliveira', $user['nome']);
   }
 
-  public function testUpdate() {
+  public function testUserUpdate() {
     $data = ['nome' => 'Novo Teste Validator Oliveira', 'email' => 'teste.oliveira@example.com', 'senha' => '1234', 'telefone' => '(11)9999-9999'];
     $this->assertTrue($this->user->update($data, self::$createdUserID));
   }
 
-  public function testDelete() {
+  public function testUserDelete() {
     $this->assertTrue($this->user->delete(self::$createdUserID));
   }
 }
