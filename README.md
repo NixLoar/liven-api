@@ -26,3 +26,7 @@ Desenvolver uma API HTTP com cadastro e controle de usuários.
 - **hotfix/nome_correção**: Crie uma nova quando for implementar uma correção **urgente** direto em produção. Crie a partir da branch *main*. Ao finalizar, dê *merge* na *main* e *dev* e a delete
 
 - **release/version**: Crie uma nova quando uma etapa de desenvolvimento estiver finalizada e for para os testes finais, na última etapa antes de ir para produção. Crie a partir da branch *dev*, após ter todas as *features*, *fixes* e *hotfixes* mergeados na *dev*. Ao finalizar os testes e possíveis correções, dê *merge* na *main* e *dev* e a delete. Ao ser deletada, a tag de versão do software deve ser atualizada
+
+## Postman Workspace
+
+workspace: https://www.postman.com/nixloar/workspace/liven-api/collection/29519308-5a37395b-4522-4933-a532-1d17b2c938e5
