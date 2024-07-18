@@ -5,7 +5,8 @@ namespace App\Models;
 use Config\Database; 
 
 class UserModel{
-  private static $table = 'users';
+  private static $tableUsers = 'users';
+  private static $tableAddresses = 'addresses';
   private static $conn = null;
 
   private static function getConnection() {
@@ -18,13 +19,25 @@ class UserModel{
 
   public static function read($id) {
     $conn = self::getConnection();
-    $sql = 'SELECT * FROM '.self::$table.' WHERE id = :id';
+    $sql = 'SELECT * FROM '.self::$tableUsers.' WHERE id = ?';
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':id', $id);
-    $stmt->execute();
+    $stmt->execute([$id]);
 
     if($stmt->rowCount() > 0) {
-      return $stmt->fetch(\PDO::FETCH_ASSOC);
+      $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+      $sqlAddress = 'SELECT * FROM ' .self::$tableAddresses.' WHERE user_id = ?';
+      $stmtAddress = $conn->prepare($sqlAddress);
+      $stmtAddress->execute([$id]);
+
+      if ($stmtAddress->rowCount() > 0) {
+          $addresses = $stmtAddress->fetchAll(\PDO::FETCH_ASSOC);
+          $userData['enderecos'] = $addresses;
+      } else {
+          $userData['enderecos'] = 'Nenhum endereco cadastrado';
+      }
+
+      return $userData;
     } else {
       throw new \Exception('Erro: nenhum usuario encontrado');
     }
@@ -33,7 +46,7 @@ class UserModel{
   public static function create($data) {
     $conn = self::getConnection();
     $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
-    $sql = 'INSERT INTO '.self::$table.' (nome, email, senha, telefone) VALUES (?, ?, ?, ?)';
+    $sql = 'INSERT INTO '.self::$tableUsers.' (nome, email, senha, telefone) VALUES (?, ?, ?, ?)';
     $stmt = $conn->prepare($sql);
     if ($stmt->execute([$data['nome'], $data['email'], $hashedPassword, $data['telefone']])){
       return $conn->lastInsertId();
@@ -44,21 +57,22 @@ class UserModel{
 
   public static function update($data, $id) {
     $conn = self::getConnection();
-    $sql = 'UPDATE ' .self::$table.' SET nome = ?, email = ?, senha = ?, telefone = ? WHERE id = ?';
+    $sql = 'UPDATE ' .self::$tableUsers.' SET nome = ?, email = ?, senha = ?, telefone = ? WHERE id = ?';
     $stmt = $conn->prepare($sql);
+    $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone'], $id]);
     return $stmt->execute([$data['nome'], $data['email'], $data['senha'], $data['telefone'], $id]);
   }
 
   public static function delete($id) {
     $conn = self::getConnection();
-    $sql = 'DELETE FROM ' .self::$table.' WHERE id=?';
+    $sql = 'DELETE FROM ' .self::$tableUsers.' WHERE id=?';
     $stmt = $conn->prepare($sql);
     return $stmt->execute([$id]);
   }
 
   public function checkCredentials($email, $senha) {
     $conn = self::getConnection();
-    $sql = 'SELECT id, senha FROM users WHERE email = :email';
+    $sql = 'SELECT id, senha FROM ' .self::$tableUsers.' WHERE email = :email';
     $stmt = $conn->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -66,7 +80,7 @@ class UserModel{
     if (!$user) {
       return [
         'success' => false,
-        'message' => 'Usuário não encontrado'
+        'message' => 'Usuario não encontrado'
       ];
     }
 

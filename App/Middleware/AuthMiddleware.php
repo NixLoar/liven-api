@@ -13,9 +13,9 @@ class AuthMiddleware {
       $token = str_replace('Bearer ', '', $authHeader);
       $authController = new AuthController();
       $decoded = $authController->validateJWT($token);
-
       if ($decoded) {
-        return $next();
+        $userID = $decoded->data->id;
+        return $next($userID);
       } else {
         http_response_code(401);
         echo json_encode(['message' => 'Acesso nao autorizado']);

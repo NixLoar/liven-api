@@ -44,7 +44,7 @@ jobs:
           sleep 1
         done
 
-    - name: Create database schema
+    - name: Create User database schema
       run: |
         mysql -h127.0.0.1 -uroot -psenha123 -e "USE liven_projeto; CREATE TABLE users (
           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,6 +53,19 @@ jobs:
           senha VARCHAR(255) NOT NULL,
           telefone VARCHAR(20) NOT NULL,
           UNIQUE KEY (email)
+        );"
+    
+    - name: Create Address database schema
+      run: |
+        mysql -h127.0.0.1 -uroot -psenha123 -e "USE liven_projeto; CREATE TABLE addresses (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          user_id INT NOT NULL,
+          logradouro VARCHAR(255) NOT NULL,
+          numero VARCHAR(20) NOT NULL,
+          cep VARCHAR(20) NOT NULL,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE
         );"
 
     - name: Run PHPUnit
