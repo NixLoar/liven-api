@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+  title: API Liven
+  description: Documentação da API Liven - CRUD de usuários e endereços
+  version: 1.0.0
+paths:
+  /api/user/read:
+    get:
+      summary: Obter os dados de um usuário autenticado
+      authentication:
+        required: true
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Dados do usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  email:
+                    type: string
+                  telefone:
+                    type: string
+        '404':
+          description: Usuário não encontrado
+        '500':
+          descrition: Erro de conexao
+
+  /api/user/create:
+    post:
+      summary: Cadastra um novo usuário no banco de dados
+      authentication:
+        required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+                telefone:
+                  type: string
+      responses:
+        '201':
+          description: Usuario cadastrado com sucesso
+        '400':
+          description: Falha ao cadastrar usuario
+        '500':
+          descrition: Erro de conexao
+
+  /api/user/update:
+    put:
+      summary: Atualizar um usuario existente
+      authentication:
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+                telefone:
+                  type: string
+      responses:
+        '201':
+          description: Usuário atualizado com sucesso
+        '400':
+          description: Falha ao atualizar usuario
+        '500':
+          descrition: Erro de conexao
+
+  /api/user/delete:
+    delete:
+      summary: Deletar um usuário
+      authentication:
+        required: true
+      requestBody:
+        required: false
+      responses:
+        '201':
+          description: Usuário deletado com sucesso
+        '400':
+          description: Falha ao deletar o usuario
+        '500':
+          descrition: Erro de conexao
+
+  /api/address/read:
+    get:
+      summary: Obter os enderecos de um usuário autenticado
+      authentication:
+        required: true
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Enderecos do usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    logradouro:
+                      type: string
+                    numero:
+                      type: string
+                    cep:
+                      type: string
+        '404':
+          description: Usuario nao possui enderecos cadastrados
+        '500':
+          descrition: Erro de conexao
+
+  /api/address?cep={numero_cep}:
+    get:
+      summary: Obter o endereco de um usuário autenticado com o cep na query string
+      authentication:
+        required: true
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Endereco do usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    logradouro:
+                      type: string
+                    numero:
+                      type: string
+                    cep:
+                      type: string
+        '404':
+          description: Usuario nao possui um endereco com o cep numero_cep
+        '500':
+          descrition: Erro de conexao
+
+  /api/address/create:
+    post:
+      summary: Adiciona um endereco associado ao usuario autenticado
+      authentication:
+        required: true
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    logradouro:
+                      type: string
+                    numero:
+                      type: string
+                    cep:
+                      type: string
+      responses:
+        '201':
+          description: Endereco cadastrado com sucesso
+        '400':
+          description: Falha ao cadastrar endereco
+        '500':
+          descrition: Erro de conexao
+
+  /api/address/update/{id}:
+    put: 
+      summary: Atualiza as informacoes de endereco associado ao usuario autenticado
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do endereco a ser atualizado
+      authentication:
+        required: true
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    logradouro:
+                      type: string
+                    numero:
+                      type: string
+                    cep:
+                      type: string
+      responses:
+        '200':
+          description: Duas possibilidades
+          - Endereco atualizado com sucesso
+          - Dados inseridos sao iguais aos ja cadastrados
+        '400':
+          description: Endereco nao encontrado ou nao pertence ao usuario.
+        '500':
+          descrition: Erro de conexao
+
+  /api/address/delete/{id}:
+    put: 
+      summary: Deleta as informacoes do endereco pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do endereco a ser deletado
+      authentication:
+        required: true
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Endereco deletado com sucesso
+        '400':
+          description: Endereco nao encontrado ou nao pertence ao usuario
+        '500':
+          descrition: Erro de conexao
+    

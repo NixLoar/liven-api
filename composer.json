@@ -2,11 +2,14 @@
     "name": "nixlo/liven-api",
     "autoload": {
         "psr-4": {
-            "SRC\\": "src/"
-        }
+            "App\\": "App/",
+            "Config\\": "config/"
+        },
+        "files": [
+            "config/database.php"
+        ]
     },
-    "files": [
-        "./config/database.php"
-    ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^11.2"
+    }
 }
