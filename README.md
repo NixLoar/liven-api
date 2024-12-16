@@ -15,11 +15,11 @@
 
 - **dev**: Most recent development code
 
-- **feature/nome_funcionalidade**: Create a new branch when implementing a new feature or improvement. Branch off from dev. Once completed, merge it into dev and delete it.
+- **feature/feature_name**: Create a new branch when implementing a new feature or improvement. Branch off from dev. Once completed, merge it into dev and delete it.
 
-- **fix/nome_correção**: Create a new branch when implementing a non-urgent fix. Branch off from dev. Once completed, merge it into dev and delete it.
+- **fix/fix_name**: Create a new branch when implementing a non-urgent fix. Branch off from dev. Once completed, merge it into dev and delete it.
 
-- **hotfix/nome_correção**: Create a new branch when implementing an urgent fix directly on production. Branch off from main. Once completed, merge it into main and dev and delete it.
+- **hotfix/fix_name**: Create a new branch when implementing an urgent fix directly on production. Branch off from main. Once completed, merge it into main and dev and delete it.
 
 - **release/version**: Create a new branch when a development phase is complete and is ready for final testing, the last step before going to production. Branch off from dev after all features, fixes, and hotfixes have been merged into dev. Once final tests and possible fixes are complete, merge into main and dev and delete it. Once deleted, the software version tag should be updated.
 
