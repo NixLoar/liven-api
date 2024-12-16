@@ -1,31 +1,27 @@
-# Projeto de avaliação técnica Backend Liven
+## HTTP API for user registration and management
 
-## Enunciado
+## Technologies Used
 
-Desenvolver uma API HTTP com cadastro e controle de usuários.
-
-## Tecnologias utilizadas
-
-- Linguagem: PHP 
+- Language: PHP
 - Web Server: Apache
-- Autenticação: JWT
-- Banco de dados: MySQL
-- Testes automatizados: PHPUnit + Github Actions
-- Documentação: Swagger
+- Authentication: JWT
+- Database: MySQL
+- Automated Testing: PHPUnit + Github Actions
+- Documentation: Swagger
 
 ## Git Flow
 
-- **main**: Código em produção
+- **main**: Production code
 
-- **dev**: Código mais recente e em desenvolvimento
+- **dev**: Most recent development code
 
-- **feature/nome_funcionalidade**: Crie uma nova quando for implementar uma nova funcionalidade ou melhoria. Crie a partir da branch *dev*. Ao finalizar, dê *merge* na *dev* e a delete
+- **feature/nome_funcionalidade**: Create a new branch when implementing a new feature or improvement. Branch off from dev. Once completed, merge it into dev and delete it.
 
-- **fix/nome_correção**: Crie uma nova quando for implementar uma correção **não urgente**. Crie a partir da branch *dev*. Ao finalizar, dê *merge* na *dev* e a delete
+- **fix/nome_correção**: Create a new branch when implementing a non-urgent fix. Branch off from dev. Once completed, merge it into dev and delete it.
 
-- **hotfix/nome_correção**: Crie uma nova quando for implementar uma correção **urgente** direto em produção. Crie a partir da branch *main*. Ao finalizar, dê *merge* na *main* e *dev* e a delete
+- **hotfix/nome_correção**: Create a new branch when implementing an urgent fix directly on production. Branch off from main. Once completed, merge it into main and dev and delete it.
 
-- **release/version**: Crie uma nova quando uma etapa de desenvolvimento estiver finalizada e for para os testes finais, na última etapa antes de ir para produção. Crie a partir da branch *dev*, após ter todas as *features*, *fixes* e *hotfixes* mergeados na *dev*. Ao finalizar os testes e possíveis correções, dê *merge* na *main* e *dev* e a delete. Ao ser deletada, a tag de versão do software deve ser atualizada
+- **release/version**: Create a new branch when a development phase is complete and is ready for final testing, the last step before going to production. Branch off from dev after all features, fixes, and hotfixes have been merged into dev. Once final tests and possible fixes are complete, merge into main and dev and delete it. Once deleted, the software version tag should be updated.
 
 ## Postman Workspace
 
